@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/backgroundpic"
+        tools:context=".ui.Login">
+
+        <ImageView
+            android:layout_width="550dp"
+            android:layout_height="265dp"
+            android:layout_below="@+id/logo"
+            android:layout_marginTop="19dp"
+            android:layout_marginEnd="0dp"
+            android:background="@drawable/input_shape" />
+
+        <ImageView
+            android:id="@+id/logo"
+            android:layout_width="500dp"
+            android:layout_height="227dp"
+            android:layout_marginTop="30dp"
+            app:srcCompat="@drawable/tonysfoodlogo" />
+
+
+        <EditText
+            android:id="@+id/login_username"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/txt"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="300dp"
+            android:layout_marginRight="45dp"
+            android:background="@drawable/input_shape"
+            android:hint="Username..."
+            android:textCursorDrawable="@null"
+            android:inputType="text"
+            android:padding="15dp"
+            android:singleLine="true"
+            android:textColor="@color/colorwhite"
+            android:textColorHint="@color/colorwhite"
+            tools:ignore="UnknownId" />
+
+        <EditText
+            android:id="@+id/login_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/login_username"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="45dp"
+            android:background="@drawable/input_shape"
+            android:hint="Password..."
+            android:textCursorDrawable="@null"
+            android:inputType="textPassword"
+            android:padding="15dp"
+            android:textColor="@color/colorwhite"
+            android:textColorHint="@color/colorwhite" />
+
+        <Button
+            android:id="@+id/Login_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/login_password"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="70dp"
+            android:layout_marginTop="40dp"
+            android:layout_marginRight="70dp"
+            android:background="@drawable/login_button"
+            android:text="Login"
+            android:textColor="@color/colorwhite" />
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:visibility="gone" />
+    </RelativeLayout>
+
+</ScrollView>

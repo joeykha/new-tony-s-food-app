@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.myheroapp">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_tonysfoodapplogo"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme"
+        android:usesCleartextTraffic="true"
+        >
+        <meta-data
+            android:name="com.samsung.android.icon_container.has_icon_container"
+            android:value="true"/>
+        <activity android:name=".ui.UserMain"
+            android:screenOrientation="portrait" ></activity>
+        <activity android:name=".ui.AddProductActivity.addproduct"
+            android:screenOrientation="portrait" />
+        <activity android:name=".ui.AddClientActivity.addclient"
+            android:screenOrientation="portrait" />
+        <activity android:name=".ui.AddUserActivity.addUser"
+            android:screenOrientation="portrait" />
+        <activity android:name=".ui.AddScheduleActivity.addschedule"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".ui.AdminMainActivity.AdminMain"
+            android:textStyle="bold"
+            android:label="@string/title_activity_admin_main"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait"/>
+
+        <activity android:name=".ui.loading"
+            android:screenOrientation="portrait" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".ui.Login"
+            android:screenOrientation="portrait" />
+    </application>
+
+</manifest>
