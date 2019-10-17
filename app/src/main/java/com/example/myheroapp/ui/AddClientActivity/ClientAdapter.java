@@ -16,8 +16,8 @@ import java.util.List;
 
 public class ClientAdapter extends RecyclerView.Adapter<ClientViewHolder> {
 
-    public interface DeleteClientInterface{
-        void OnClientDeleted(int clientId);
+    public interface DeleteClientInterface {
+        void OnClientDeleted(int clientId, int position);
     }
 
     private Context mContext;
@@ -36,14 +36,14 @@ public class ClientAdapter extends RecyclerView.Adapter<ClientViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ClientViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ClientViewHolder holder, final int position) {
         final Client client = mItems.get(position);
         holder.tvClientName.setText(client.getName());
         holder.tvLocation.setText(client.getLocation());
         holder.ivDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mDeleteClientInterface.OnClientDeleted(client.getId());
+                mDeleteClientInterface.OnClientDeleted(client.getId(), position);
             }
         });
     }
@@ -51,22 +51,32 @@ public class ClientAdapter extends RecyclerView.Adapter<ClientViewHolder> {
     @Override
     public int getItemCount() {
         int retInt = 0;
-        if(mItems != null){
+        if (mItems != null) {
             retInt = mItems.size();
         }
         return retInt;
     }
 
-    public void setItems(List<Client> items){
-        if(mItems == null){
+    public void setItems(List<Client> items) {
+        if (mItems == null) {
             mItems = new ArrayList<>();
-        }else{
+        } else {
             mItems.clear();
         }
         mItems.addAll(items);
     }
 
-    public void setDeleteClientInterface(DeleteClientInterface deleteClientInterface){
+    public void deleteItem(int position) {
+        List<Client> tmpItems = new ArrayList<>();
+        if (mItems != null) {
+            tmpItems.addAll(mItems);
+            tmpItems.remove(position);
+            setItems(tmpItems);
+            notifyDataSetChanged();
+        }
+    }
+
+    public void setDeleteClientInterface(DeleteClientInterface deleteClientInterface) {
         mDeleteClientInterface = deleteClientInterface;
     }
 

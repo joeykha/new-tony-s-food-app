@@ -2,23 +2,23 @@ package com.example.myheroapp.ui.AddProductActivity;
 
 
 import android.content.Context;
-        import android.view.LayoutInflater;
-        import android.view.View;
-        import android.view.ViewGroup;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
-        import androidx.annotation.NonNull;
-        import androidx.recyclerview.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
-        import com.example.myheroapp.R;
-        import com.example.myheroapp.models.Product;
+import com.example.myheroapp.R;
+import com.example.myheroapp.models.Product;
 
-        import java.util.ArrayList;
-        import java.util.List;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ProductAdapter extends RecyclerView.Adapter<ProductViewHolder> {
 
-    public interface DeleteProductInterface{
-        void OnProductDeleted(int productId);
+    public interface DeleteProductInterface {
+        void OnProductDeleted(int productId, int position);
     }
 
     private Context mContext;
@@ -37,13 +37,13 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ProductViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ProductViewHolder holder, final int position) {
         final Product product = mItems.get(position);
         holder.tvProductName.setText(product.getName());
         holder.ivDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mDeleteProductInterface.OnProductDeleted(product.getId());
+                mDeleteProductInterface.OnProductDeleted(product.getId(), position);
             }
         });
     }
@@ -51,22 +51,32 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductViewHolder> {
     @Override
     public int getItemCount() {
         int retInt = 0;
-        if(mItems != null){
+        if (mItems != null) {
             retInt = mItems.size();
         }
         return retInt;
     }
 
-    public void setItems(List<Product> items){
-        if(mItems == null){
+    public void setItems(List<Product> items) {
+        if (mItems == null) {
             mItems = new ArrayList<>();
-        }else{
+        } else {
             mItems.clear();
         }
         mItems.addAll(items);
     }
 
-    public void setDeleteProductInterface(DeleteProductInterface deleteProductInterfacee){
+    public void deleteItem(int position) {
+        List<Product> tmpItems = new ArrayList<>();
+        if (mItems != null) {
+            tmpItems.addAll(mItems);
+            tmpItems.remove(position);
+            setItems(tmpItems);
+            notifyDataSetChanged();
+        }
+    }
+
+    public void setDeleteProductInterface(DeleteProductInterface deleteProductInterfacee) {
         mDeleteProductInterface = deleteProductInterfacee;
     }
 

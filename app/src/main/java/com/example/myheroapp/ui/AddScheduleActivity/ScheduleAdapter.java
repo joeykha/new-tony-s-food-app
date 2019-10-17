@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -17,7 +18,7 @@ import java.util.List;
 public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleViewHolder> {
 
     public interface DeleteScheduleInterface{
-        void OnScheduleDeleted(int scheduleId);
+        void OnScheduleDeleted(int scheduleId, int position);
     }
 
     private List<Schedule> mItems;
@@ -43,9 +44,7 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleViewHolder> {
         holder.ivDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mDeleteScheduleInterface.OnScheduleDeleted(schedule.getId());
-                mItems.remove(position);
-                notifyDataSetChanged();
+                mDeleteScheduleInterface.OnScheduleDeleted(schedule.getId(), position);
             }
         });
     }
@@ -67,6 +66,16 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleViewHolder> {
         }
         mItems.addAll(items);
         notifyDataSetChanged();
+    }
+
+    public void deleteItem(int position){
+        List<Schedule> tmpItems = new ArrayList<>();
+        if(mItems != null){
+            tmpItems.addAll(mItems);
+            tmpItems.remove(position);
+            setItems(tmpItems);
+            notifyDataSetChanged();
+        }
     }
 
     public void setDeleteScheduleInterface(DeleteScheduleInterface deleteScheduleInterface) {

@@ -44,6 +44,7 @@ public class addclient extends AppCompatActivity implements ClientAdapter.Delete
     ProgressBar progressBar;
 
     RecyclerView rv;
+    ClientAdapter clientAdapter;
     Button buttonAddUpdate;
     List<Client> clientList;
 
@@ -61,7 +62,7 @@ public class addclient extends AppCompatActivity implements ClientAdapter.Delete
 
         progressBar = findViewById(R.id.progressBar);
         rv = findViewById(R.id.rvClients);
-        rv.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+        rv.setLayoutManager(new LinearLayoutManager(getApplicationContext(), RecyclerView.VERTICAL, false));
 
         clientList = new ArrayList<>();
 
@@ -151,7 +152,7 @@ public class addclient extends AppCompatActivity implements ClientAdapter.Delete
         isUpdating = false;
     }
 
-    private void deleteclient(int id) {
+    private void deleteClient(int id) {
         PerformNetworkRequest request = new PerformNetworkRequest(ClientApi.URL_DELETE_CLIENT + id, null, CODE_GET_REQUEST);
         request.execute();
     }
@@ -169,21 +170,23 @@ public class addclient extends AppCompatActivity implements ClientAdapter.Delete
             ));
         }
 
-        ClientAdapter clientAdapter = new ClientAdapter(getApplicationContext());
+        clientAdapter = new ClientAdapter(getApplicationContext());
         clientAdapter.setItems(clientList);
         clientAdapter.setDeleteClientInterface(this);
         rv.setAdapter(clientAdapter);
     }
 
     @Override
-    public void OnClientDeleted(final int clientId) {
+    public void OnClientDeleted(final int clientId, final int position) {
         new AlertDialog.Builder(addclient.this)
+                .setCancelable(false)
                 .setTitle("Delete Client?")
                 .setMessage("Are you sure?")
                 .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        deleteclient(clientId);
+                        deleteClient(clientId);
+                        clientAdapter.deleteItem(position);
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -240,73 +243,4 @@ public class addclient extends AppCompatActivity implements ClientAdapter.Delete
             return null;
         }
     }
-
-    //todo change from listView to recycleView
-    class clientAdapter extends ArrayAdapter<Client> {
-        private final List<Client> Clientlist;
-        List<Client> clientList;
-
-        public clientAdapter(List<Client> clientList) {
-            super(addclient.this, R.layout.layout_client_list, clientList);
-            this.Clientlist = clientList;
-        }
-
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            LayoutInflater inflater = getLayoutInflater();
-            View listViewItem = inflater.inflate(R.layout.layout_client_list, null, true);
-
-            TextView textViewName = listViewItem.findViewById(R.id.textViewName);
-
-            TextView textViewUpdate = listViewItem.findViewById(R.id.textViewUpdate);
-            TextView textViewDelete = listViewItem.findViewById(R.id.textViewDelete);
-
-            final Client client = Clientlist.get(position);
-
-            textViewName.setText(client.getName());
-
-            textViewUpdate.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    isUpdating = true;
-//                    edittextclientid.setText(String.valueOf(client.getId()));
-                    tietClientName.setText(client.getName());
-                    tietLocation.setText(client.getLocation());
-
-                    // ratingBar.setRating(hero.getRating());
-
-                    buttonAddUpdate.setText("Update");
-                }
-            });
-
-            textViewDelete.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-
-                    AlertDialog.Builder builder = new AlertDialog.Builder(addclient.this);
-
-                    builder.setTitle("Delete " + client.getName())
-                            .setMessage("Are you sure you want to delete it?")
-                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    deleteclient(client.getId());
-                                }
-                            })
-                            .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-
-                                }
-                            })
-                            .setIcon(android.R.drawable.ic_dialog_alert)
-                            .show();
-
-                }
-
-            });
-
-            return listViewItem;
-        }
-    }
-
 }

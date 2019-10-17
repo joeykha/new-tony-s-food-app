@@ -5,13 +5,9 @@ import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -44,6 +40,7 @@ public class addproduct extends AppCompatActivity implements ProductAdapter.Dele
     ProgressBar progressBar;
 
     RecyclerView rv;
+    ProductAdapter productAdapter;
     Button buttonAddUpdate;
     List<Product> productList;
 
@@ -60,7 +57,7 @@ public class addproduct extends AppCompatActivity implements ProductAdapter.Dele
 
         progressBar = findViewById(R.id.progressBar);
         rv = findViewById(R.id.rvProducts);
-        rv.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+        rv.setLayoutManager(new LinearLayoutManager(getApplicationContext(), RecyclerView.VERTICAL, false));
 
         productList = new ArrayList<>();
 
@@ -90,7 +87,6 @@ public class addproduct extends AppCompatActivity implements ProductAdapter.Dele
         }
 
 
-
 /// add condition for empty fields
 
         HashMap<String, String> params = new HashMap<>();
@@ -110,9 +106,7 @@ public class addproduct extends AppCompatActivity implements ProductAdapter.Dele
 
 
     private void updateProduct() {
-
         String name = tietProductName.getText().toString().trim();
-
 
         if (TextUtils.isEmpty(name)) {
             tietProductName.setError("Please enter Name");
@@ -120,12 +114,8 @@ public class addproduct extends AppCompatActivity implements ProductAdapter.Dele
             return;
         }
 
-
-
         HashMap<String, String> params = new HashMap<>();
-//        params.put("id", String.valueOf(id));
         params.put("name", name);
-
 
         PerformNetworkRequest request = new PerformNetworkRequest(ProductApi.URL_UPDATE_PRODUCT, params, CODE_POST_REQUEST);
         request.execute();
@@ -153,7 +143,7 @@ public class addproduct extends AppCompatActivity implements ProductAdapter.Dele
             ));
         }
 
-        ProductAdapter productAdapter = new ProductAdapter(getApplicationContext());
+        productAdapter = new ProductAdapter(getApplicationContext());
 
 
         productAdapter.setItems(productList);
@@ -161,24 +151,6 @@ public class addproduct extends AppCompatActivity implements ProductAdapter.Dele
         rv.setAdapter(productAdapter);
     }
 
-    @Override
-    public void OnProductDeleted(final int productId) {
-        new AlertDialog.Builder(addproduct.this)
-                .setTitle("Delete Product?")
-                .setMessage("Are you sure?")
-                .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        deleteProduct(productId);
-                    }
-                })
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                }).show();
-    }
 
     private class PerformNetworkRequest extends AsyncTask<Void, Void, String> {
         String url;
@@ -227,70 +199,24 @@ public class addproduct extends AppCompatActivity implements ProductAdapter.Dele
         }
     }
 
-    //todo change from listView to recycleView
-    class productAdapter extends ArrayAdapter<Product> {
-        private final List<Product> ProductList;
-        List<Product> productList;
-
-        public productAdapter(List<Product> productList) {
-            super(addproduct.this, R.layout.layout_product_list, productList);
-            this.ProductList = productList;
-        }
-
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            LayoutInflater inflater = getLayoutInflater();
-            View listViewItem = inflater.inflate(R.layout.layout_product_list, null, true);
-
-            TextView textViewName = listViewItem.findViewById(R.id.textViewName);
-
-            TextView textViewUpdate = listViewItem.findViewById(R.id.textViewUpdate);
-            TextView textViewDelete = listViewItem.findViewById(R.id.textViewDelete);
-
-            final Product product = ProductList.get(position);
-
-            textViewName.setText(product.getName());
-
-            textViewUpdate.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    isUpdating = true;
-                    tietProductName.setText(product.getName());
-
-                    // ratingBar.setRating(hero.getRating());
-
-                    buttonAddUpdate.setText("Update");
-                }
-            });
-
-            textViewDelete.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-
-                    AlertDialog.Builder builder = new AlertDialog.Builder(addproduct.this);
-
-                    builder.setTitle("Delete " + product.getName())
-                            .setMessage("Are you sure you want to delete it?")
-                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    deleteProduct(product.getId());
-                                }
-                            })
-                            .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-
-                                }
-                            })
-                            .setIcon(android.R.drawable.ic_dialog_alert)
-                            .show();
-
-                }
-
-            });
-
-            return listViewItem;
-        }
+    @Override
+    public void OnProductDeleted(final int productId, final int position) {
+        new AlertDialog.Builder(addproduct.this)
+                .setCancelable(false)
+                .setTitle("Delete Product?")
+                .setMessage("Are you sure?")
+                .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        deleteProduct(productId);
+                        productAdapter.deleteItem(position);
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                }).show();
     }
-
 }

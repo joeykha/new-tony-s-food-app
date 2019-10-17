@@ -1,25 +1,54 @@
 package com.example.myheroapp.ui.AdminMainActivity;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myheroapp.R;
+import com.example.myheroapp.RequestHandler;
+import com.example.myheroapp.models.Client;
+import com.example.myheroapp.resources.ClientApi;
+import com.example.myheroapp.ui.AddClientActivity.ClientAdapter;
 import com.example.myheroapp.ui.AddClientActivity.addclient;
+import com.example.myheroapp.ui.AddProductActivity.addproduct;
 import com.example.myheroapp.ui.AddScheduleActivity.addschedule;
 import com.example.myheroapp.ui.AddUserActivity.addUser;
-import com.example.myheroapp.ui.AddProductActivity.addproduct;
 import com.google.android.material.navigation.NavigationView;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+import static android.view.View.GONE;
+
 public class AdminMain extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, AdminMainAdapter.AdminMainInterface {
+
+    private static final int CODE_GET_REQUEST = 1024;
+    private static final int CODE_POST_REQUEST = 1025;
+
+    ProgressBar pb;
+
+    List<Object> rvItems;
+    RecyclerView rvClients;
+    AdminMainAdapter clientsAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,8 +56,6 @@ public class AdminMain extends AppCompatActivity
         setContentView(R.layout.activity_admin_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -36,6 +63,13 @@ public class AdminMain extends AppCompatActivity
         drawer.addDrawerListener(toggle);
         toggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
+
+        pb = findViewById(R.id.pb);
+        rvClients = findViewById(R.id.rvAdminMain);
+        rvClients.setLayoutManager(new LinearLayoutManager(getApplicationContext(),RecyclerView.VERTICAL, false));
+
+
+        readclients();
     }
 
     @Override
@@ -43,8 +77,6 @@ public class AdminMain extends AppCompatActivity
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
         }
     }
 
@@ -89,7 +121,7 @@ public class AdminMain extends AppCompatActivity
             Intent p = new Intent(AdminMain.this, addUser.class);
             startActivity(p);
 
-        }  else if (id == R.id.nav_schedule) {
+        } else if (id == R.id.nav_schedule) {
             Intent p = new Intent(AdminMain.this, addschedule.class);
             startActivity(p);
 
@@ -98,6 +130,88 @@ public class AdminMain extends AppCompatActivity
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void readclients() {
+        PerformNetworkRequest request = new PerformNetworkRequest(ClientApi.URL_READ_CLIENTS, null, CODE_GET_REQUEST);
+        request.execute();
+    }
+
+
+
+    private class PerformNetworkRequest extends AsyncTask<Void, Void, String> {
+        String url;
+        HashMap<String, String> params;
+        int requestCode;
+
+        PerformNetworkRequest(String url, HashMap<String, String> params, int requestCode) {
+            this.url = url;
+            this.params = params;
+            this.requestCode = requestCode;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pb.setVisibility(View.VISIBLE);
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            pb.setVisibility(GONE);
+            try {
+                JSONObject object = new JSONObject(s);
+                if (!object.getBoolean("error")) {
+                    Toast.makeText(getApplicationContext(), object.getString("message"), Toast.LENGTH_SHORT).show();
+                    refreshclientList(object.getJSONArray("client"));
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        @Override
+        protected String doInBackground(Void... voids) {
+            RequestHandler requestHandler = new RequestHandler();
+
+            if (requestCode == CODE_POST_REQUEST)
+                return requestHandler.sendPostRequest(url, params);
+
+
+            if (requestCode == CODE_GET_REQUEST)
+                return requestHandler.sendGetRequest(url);
+
+            return null;
+        }
+    }
+
+    private void refreshclientList(JSONArray client) throws JSONException {
+        List<Client> clientItems = new ArrayList<>();
+
+        for (int i = 0; i < client.length(); i++) {
+            JSONObject obj = client.getJSONObject(i);
+
+            clientItems.add(new Client(
+                    obj.getInt("id"),
+                    obj.getString("name"),
+                    obj.getString("location")
+            ));
+        }
+
+        rvItems = new ArrayList<>();
+        rvItems.add("Clients:");
+        rvItems.addAll(clientItems);
+
+        AdminMainAdapter adapter = new AdminMainAdapter(getApplicationContext());
+        adapter.setItems(rvItems);
+        adapter.setAdminMainInterface(this);
+        rvClients.setAdapter(adapter);
+    }
+
+    @Override
+    public void OnCheckStockClicked(int clientId) {
+        startActivity(new Intent(AdminMain.this, ProductDetailsActivity.class));
     }
 }
 
