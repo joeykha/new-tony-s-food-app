@@ -10,7 +10,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".ui.AdminMainActivity.ProductDetailsActivity" />
+        <activity android:name=".ui.ProductDetailsActivity.ProductDetailsActivity"
+            android:label="@string/title_activity_product_details"/>
         <activity
             android:name=".ui.UserMain"
             android:screenOrientation="portrait" />

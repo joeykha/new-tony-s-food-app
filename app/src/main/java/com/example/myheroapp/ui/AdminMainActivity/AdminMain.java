@@ -21,11 +21,11 @@ import com.example.myheroapp.R;
 import com.example.myheroapp.RequestHandler;
 import com.example.myheroapp.models.Client;
 import com.example.myheroapp.resources.ClientApi;
-import com.example.myheroapp.ui.AddClientActivity.ClientAdapter;
 import com.example.myheroapp.ui.AddClientActivity.addclient;
 import com.example.myheroapp.ui.AddProductActivity.addproduct;
 import com.example.myheroapp.ui.AddScheduleActivity.addschedule;
 import com.example.myheroapp.ui.AddUserActivity.addUser;
+import com.example.myheroapp.ui.ProductDetailsActivity.ProductDetailsActivity;
 import com.google.android.material.navigation.NavigationView;
 
 import org.json.JSONArray;
