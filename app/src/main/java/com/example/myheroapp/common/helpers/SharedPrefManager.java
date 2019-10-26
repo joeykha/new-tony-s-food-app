@@ -1,4 +1,4 @@
-package com.example.myheroapp.helpers;
+package com.example.myheroapp.common.helpers;
 
 import android.content.Context;
 import android.content.Intent;

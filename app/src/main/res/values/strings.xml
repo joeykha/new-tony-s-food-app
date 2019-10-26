@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Tonys Food</string>
-    <string name="title_activity_admin_main" >Tonys Food</string>
+    <string name="title_activity_admin_main">Tonys Food</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_header_title">Tonys Food Murchendise</string>
@@ -24,4 +24,5 @@
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
     <string name="user_not_active">You are not active!</string>
+    <string name="title_activity_product_details">Stock Details</string>
 </resources>

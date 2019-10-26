@@ -6,18 +6,15 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myheroapp.R;
 import com.example.myheroapp.RequestHandler;
@@ -25,6 +22,8 @@ import com.example.myheroapp.models.User;
 import com.example.myheroapp.resources.UserApi;
 import com.example.myheroapp.ui.AddClientActivity.addclient;
 import com.example.myheroapp.ui.AdminMainActivity.AdminMain;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -39,18 +38,19 @@ import java.util.List;
 import static android.view.View.GONE;
 
 
-public class addUser extends AppCompatActivity {
+public class addUser extends AppCompatActivity implements UserAdapter.UserInterface {
 
     private static final int CODE_GET_REQUEST = 1024;
     private static final int CODE_POST_REQUEST = 1025;
 
-
-    EditText editTextUserId, editTextFirstName, editTextFatherName, editTextLastName, editTextUserName, editTextPassword, editTextPhoneNumber;
+    TextInputLayout tilFirstName, tilFathersName, tilLastName, tilUsername, tilPassword, tilPhoneNumber;
+    TextInputEditText tietFirstName, tietFathersName, tietLastName, tietUsername, tietPassword, tietPhoneNumber;
     ToggleButton toggleIsActive, toggleIsAdmin;
     ProgressBar progressBar;
-
-    ListView listView;
     Button buttonAddUpdate;
+
+    RecyclerView rvUsers;
+    UserAdapter userAdapter;
     List<User> userList;
 
     boolean isUpdating = false;
@@ -59,45 +59,32 @@ public class addUser extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.activity_adduser);
-        setContentView(R.layout.activity_user);
+        setContentView(R.layout.activity_add_user);
 
-        editTextUserId = (EditText) findViewById(R.id.editTextUserId);
-        editTextFirstName = (EditText) findViewById(R.id.editTextFirstName);
-        editTextFatherName = (EditText) findViewById(R.id.editTextFatherName);
-        editTextLastName = (EditText) findViewById(R.id.editTextLastName);
-        editTextUserName = (EditText) findViewById(R.id.editTextUserName);
-        editTextPassword = (EditText) findViewById(R.id.editTextPassword);
-        editTextPhoneNumber = (EditText) findViewById(R.id.editTextPhoneNumber);
-        toggleIsActive = (ToggleButton) findViewById(R.id.toggleIsActive);
-        toggleIsAdmin = (ToggleButton) findViewById(R.id.toggleIsAdmin);
+        rvUsers = findViewById(R.id.rvUsers);
+
+        tilFirstName = findViewById(R.id.tilFirstName);
+        tilFathersName = findViewById(R.id.tilFathersName);
+        tilLastName = findViewById(R.id.tilLastName);
+        tilUsername = findViewById(R.id.tilUsername);
+        tilPassword = findViewById(R.id.tilPassword);
+        tilPhoneNumber = findViewById(R.id.tilPhoneNumber);
+
+        tietFirstName = findViewById(R.id.tietFirstName);
+        tietFathersName = findViewById(R.id.tietFathersName);
+        tietLastName = findViewById(R.id.tietLastName);
+        tietUsername = findViewById(R.id.tietUsername);
+        tietPassword = findViewById(R.id.tietPassword);
+        tietPhoneNumber = findViewById(R.id.tietPhoneNumber);
+        toggleIsActive = findViewById(R.id.toggleIsActive);
+        toggleIsAdmin = findViewById(R.id.toggleIsAdmin);
 
 
-        buttonAddUpdate = (Button) findViewById(R.id.buttonAddUpdate);
+        buttonAddUpdate = findViewById(R.id.buttonAddUpdate);
 
-        progressBar = (ProgressBar) findViewById(R.id.progressBar);
-        listView = (ListView) findViewById(R.id.listViewUsers);
+        progressBar = findViewById(R.id.progressBar);
 
         userList = new ArrayList<>();
-
-
-        BtnMove = findViewById(R.id.buttonclient);
-
-//        BtnMove.setOnClickListener(new View.OnClickListener() {
-        //          @Override
-        //        public void onClick(View view) {
-        //          movetoaddclient();
-        //    }
-        //});
-
-        BtnMove = findViewById(R.id.buttonproductt);
-
-//        BtnMove.setOnClickListener(new View.OnClickListener() {
-        //          @Override
-        //        public void onClick(View view) {
-        //          movetoaddproduct();
-        //    }
-        // });
 
 
         buttonAddUpdate.setOnClickListener(new View.OnClickListener() {
@@ -127,13 +114,13 @@ public class addUser extends AppCompatActivity {
 
 
     private void createUser() {
-        String firstname = editTextFirstName.getText().toString().trim();
-        String fathername = editTextFatherName.getText().toString().trim();
-        String lastname = editTextLastName.getText().toString().trim();
-        String username = editTextUserName.getText().toString().trim();
-        String password = editTextPassword.getText().toString().trim();
+        String firstname = tietFirstName.getText().toString().trim();
+        String fathername = tietFathersName.getText().toString().trim();
+        String lastname = tietLastName.getText().toString().trim();
+        String username = tietUsername.getText().toString().trim();
+        String password = tietPassword.getText().toString().trim();
         String hashed_password = md5(password);
-        String phonenumber = editTextPhoneNumber.getText().toString().trim();
+        String phonenumber = tietPhoneNumber.getText().toString().trim();
         String isactive = "1";
         if (toggleIsActive.isChecked() == true) {
             isactive = "1";
@@ -149,35 +136,35 @@ public class addUser extends AppCompatActivity {
 
 
         if (TextUtils.isEmpty(firstname)) {
-            editTextFirstName.setError("Please enter First Name");
-            editTextFirstName.requestFocus();
+            tietFirstName.setError("Please enter First Name");
+            tietFirstName.requestFocus();
             return;
         }
         if (TextUtils.isEmpty(fathername)) {
-            editTextFatherName.setError("Please enter Father Name");
-            editTextFatherName.requestFocus();
+            tietFathersName.setError("Please enter Father Name");
+            tietFathersName.requestFocus();
             return;
         }
         if (TextUtils.isEmpty(lastname)) {
-            editTextLastName.setError("Please enter Last Name");
-            editTextLastName.requestFocus();
+            tietLastName.setError("Please enter Last Name");
+            tietLastName.requestFocus();
             return;
         }
         if (TextUtils.isEmpty(username)) {
-            editTextUserName.setError("Please enter Username");
-            editTextUserName.requestFocus();
+            tietUsername.setError("Please enter Username");
+            tietUsername.requestFocus();
             return;
         }
 
         if (TextUtils.isEmpty(password)) {
-            editTextPassword.setError("Please enter Password");
-            editTextPassword.requestFocus();
+            tietPassword.setError("Please enter Password");
+            tietPassword.requestFocus();
             return;
         }
 
         if (TextUtils.isEmpty(phonenumber)) {
-            editTextPhoneNumber.setError("Please enter Phone Number");
-            editTextPhoneNumber.requestFocus();
+            tietPhoneNumber.setError("Please enter Phone Number");
+            tietPhoneNumber.requestFocus();
             return;
         }
 
@@ -195,12 +182,12 @@ public class addUser extends AppCompatActivity {
 
         PerformNetworkRequest request = new PerformNetworkRequest(UserApi.URL_CREATE_USER, params, CODE_POST_REQUEST);
         request.execute();
-        editTextFirstName.setText("");
-        editTextFatherName.setText("");
-        editTextLastName.setText("");
-        editTextUserName.setText("");
-        editTextPassword.setText("");
-        editTextPhoneNumber.setText("");
+        tietFirstName.setText("");
+        tietFathersName.setText("");
+        tietLastName.setText("");
+        tietUsername.setText("");
+        tietPassword.setText("");
+        tietPhoneNumber.setText("");
         toggleIsActive.setChecked(false);
         toggleIsAdmin.setChecked(false);
     }
@@ -211,13 +198,13 @@ public class addUser extends AppCompatActivity {
     }
 
     private void updateUser() {
-        String id = editTextUserId.getText().toString();
-        String firstname = editTextFirstName.getText().toString().trim();
-        String fathername = editTextFatherName.getText().toString().trim();
-        String lastname = editTextLastName.getText().toString().trim();
-        String username = editTextUserName.getText().toString().trim();
-        //String password = editTextPassword.getText().toString().trim();
-        String phonenumber = editTextPhoneNumber.getText().toString();
+
+        String firstname = tietFirstName.getText().toString().trim();
+        String fathername = tietFathersName.getText().toString().trim();
+        String lastname = tietLastName.getText().toString().trim();
+        String username = tietUsername.getText().toString().trim();
+        String password = tietPassword.getText().toString().trim();
+        String phonenumber = tietPhoneNumber.getText().toString().trim();
         String isactive = "1";
         if (toggleIsActive.isChecked() == true) {
             isactive = "1";
@@ -233,46 +220,45 @@ public class addUser extends AppCompatActivity {
 
 
         if (TextUtils.isEmpty(firstname)) {
-            editTextFirstName.setError("Please enter First Name");
-            editTextFirstName.requestFocus();
+            tietFirstName.setError("Please enter First Name");
+            tietFirstName.requestFocus();
             return;
         }
         if (TextUtils.isEmpty(fathername)) {
-            editTextFatherName.setError("Please enter Father Name");
-            editTextFatherName.requestFocus();
+            tietFathersName.setError("Please enter Father Name");
+            tietFathersName.requestFocus();
             return;
         }
         if (TextUtils.isEmpty(lastname)) {
-            editTextLastName.setError("Please enter Last Name");
-            editTextLastName.requestFocus();
+            tietLastName.setError("Please enter Last Name");
+            tietLastName.requestFocus();
             return;
         }
         if (TextUtils.isEmpty(username)) {
-            editTextUserName.setError("Please enter Username");
-            editTextUserName.requestFocus();
+            tietUsername.setError("Please enter Username");
+            tietUsername.requestFocus();
             return;
         }
 
+        if (TextUtils.isEmpty(password)) {
+            tietPassword.setError("Please enter Password");
+            tietPassword.requestFocus();
+            return;
+        }
 
         if (TextUtils.isEmpty(phonenumber)) {
-            editTextPhoneNumber.setError("Please enter Phone Number");
-            editTextPhoneNumber.requestFocus();
-            return;
-        }
-        if (TextUtils.isEmpty(phonenumber)) {
-            editTextPhoneNumber.setError("Please enter Phone Number");
-            editTextPhoneNumber.requestFocus();
+            tietPhoneNumber.setError("Please enter Phone Number");
+            tietPhoneNumber.requestFocus();
             return;
         }
 
-
+        //todo check why password is commented
         HashMap<String, String> params = new HashMap<>();
-        params.put("id", String.valueOf(id));
         params.put("firstName", firstname);
         params.put("fatherName", fathername);
         params.put("lastName", lastname);
         params.put("userName", username);
-        //params.put("password", password);
+//        params.put("password", password);
         params.put("phoneNumber", String.valueOf(phonenumber));
         params.put("isActive", isactive);
         params.put("isAdmin", isadmin);
@@ -283,13 +269,13 @@ public class addUser extends AppCompatActivity {
 
         buttonAddUpdate.setText("Add");
 
-        editTextFirstName.setText("");
-        editTextFatherName.setText("");
-        editTextLastName.setText("");
-        editTextUserName.setText("");
-        editTextPassword.setVisibility(View.VISIBLE);
-        editTextPassword.setText("");
-        editTextPhoneNumber.setText("");
+        tietFirstName.setText("");
+        tietFathersName.setText("");
+        tietLastName.setText("");
+        tietUsername.setText("");
+        tietPassword.setText("");
+        tietPassword.setVisibility(View.VISIBLE);
+        tietPhoneNumber.setText("");
         toggleIsActive.setChecked(false);
         toggleIsAdmin.setChecked(false);
 
@@ -320,9 +306,13 @@ public class addUser extends AppCompatActivity {
             ));
         }
 
-        UserAdapter adapter = new UserAdapter(userList);
-        listView.setAdapter(adapter);
+        rvUsers.setLayoutManager(new LinearLayoutManager(getApplicationContext(), RecyclerView.VERTICAL, false) );
+        userAdapter = new UserAdapter(getApplicationContext());
+        userAdapter.setUserInterface(this);
+        userAdapter.setItems(userList);
+        rvUsers.setAdapter(userAdapter);
     }
+
 
     private class PerformNetworkRequest extends AsyncTask<Void, Void, String> {
         String url;
@@ -348,8 +338,10 @@ public class addUser extends AppCompatActivity {
             try {
                 JSONObject object = new JSONObject(s);
                 if (!object.getBoolean("error")) {
-                    //Toast.makeText(getApplicationContext(), object.getString("message"), Toast.LENGTH_SHORT).show();
-                    refreshUserList(object.getJSONArray("user"));
+                    Toast.makeText(getApplicationContext(), object.getString("message"), Toast.LENGTH_SHORT).show();
+                    if (url.equals(UserApi.URL_READ_USERS)) {
+                        refreshUserList(object.getJSONArray("user"));
+                    }
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -371,87 +363,6 @@ public class addUser extends AppCompatActivity {
         }
     }
 
-    class UserAdapter extends ArrayAdapter<User> {
-        List<User> userList;
-
-        public UserAdapter(List<User> userList) {
-            super(addUser.this, R.layout.layout_user_list, userList);
-            this.userList = userList;
-        }
-
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            LayoutInflater inflater = getLayoutInflater();
-            View listViewItem = inflater.inflate(R.layout.layout_user_list, null, true);
-
-            TextView textViewfirstName = listViewItem.findViewById(R.id.textViewName);
-
-            TextView textViewUpdate = listViewItem.findViewById(R.id.textViewUpdate);
-            TextView textViewDelete = listViewItem.findViewById(R.id.textViewDelete);
-
-            final User user = userList.get(position);
-
-            textViewfirstName.setText(user.getFirstName());
-
-            textViewUpdate.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    isUpdating = true;
-                    editTextUserId.setText(String.valueOf(user.getId()));
-                    editTextFirstName.setText(user.getFirstName());
-                    editTextFatherName.setText(user.getFatherName());
-                    editTextLastName.setText(user.getLastName());
-                    editTextUserName.setText(user.getUserName());
-                    editTextPassword.setVisibility(GONE);
-                    //editTextPassword.setText("");
-                    editTextPhoneNumber.setText(String.valueOf(user.getPhoneNumber()));
-                    if (user.getIsActive() == 1) {
-                        toggleIsActive.setChecked(true);
-                    } else {
-                        toggleIsActive.setChecked(false);
-                    }
-                    if (user.getIsAdmin() == 1) {
-                        toggleIsAdmin.setChecked(true);
-                    } else {
-                        toggleIsAdmin.setChecked(false);
-                    }
-
-                    // ratingBar.setRating(hero.getRating());
-
-                    buttonAddUpdate.setText("Update");
-                }
-            });
-
-            textViewDelete.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-
-                    AlertDialog.Builder builder = new AlertDialog.Builder(addUser.this);
-
-                    builder.setTitle("Delete " + user.getFirstName())
-                            .setMessage("Are you sure you want to delete it?")
-                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    deleteUser(user.getId());
-                                }
-                            })
-                            .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-
-                                }
-                            })
-                            .setIcon(android.R.drawable.ic_dialog_alert)
-                            .show();
-
-                }
-
-            });
-
-            return listViewItem;
-        }
-    }
-
     static public String md5(String s) {
         try {
             // Create MD5 Hash
@@ -469,6 +380,32 @@ public class addUser extends AppCompatActivity {
             e.printStackTrace();
         }
         return "";
+    }
+
+    @Override
+    public void OnUserDeleted(final int userId, final int position) {
+        new AlertDialog.Builder(addUser.this)
+                .setCancelable(false)
+                .setTitle("Delete User")
+                .setMessage("Are you sure?")
+                .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        deleteUser(userId);
+                        userAdapter.deleteItem(position);
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                }).show();
+    }
+
+    @Override
+    public void OnUserUpdated(User user) {
+
     }
 
 }

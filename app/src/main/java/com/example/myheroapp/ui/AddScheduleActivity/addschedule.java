@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -152,7 +153,7 @@ public class addschedule extends AppCompatActivity implements ScheduleAdapter.De
                 }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
                 dpd.getDatePicker().setMinDate(System.currentTimeMillis());
 
-                dpd.getDatePicker().setMaxDate(System.currentTimeMillis()+1296000000);
+                dpd.getDatePicker().setMaxDate(System.currentTimeMillis() + 1296000000);
                 dpd.show();
             }
         });
@@ -190,9 +191,10 @@ public class addschedule extends AppCompatActivity implements ScheduleAdapter.De
         });
 
         mRvSchedule = findViewById(R.id.rvScheduals);
-        mRvSchedule.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+        mRvSchedule.setLayoutManager(new LinearLayoutManager(getApplicationContext(), RecyclerView.VERTICAL, false));
         mAdapter = new ScheduleAdapter(getApplicationContext());
         mAdapter.setDeleteScheduleInterface(this);
+
 
         mTietSearchDate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -240,19 +242,10 @@ public class addschedule extends AppCompatActivity implements ScheduleAdapter.De
 
                 }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
                 dpd.getDatePicker().setMinDate(System.currentTimeMillis());
-                dpd.getDatePicker().setMaxDate(System.currentTimeMillis()+1296000000);
+                dpd.getDatePicker().setMaxDate(System.currentTimeMillis() + 1296000000);
                 dpd.show();
             }
         });
-
-
-//        mAdapter.setItems(new ArrayList<Schedule>() {{
-//            add(new Schedule(7, 1, 1, new Date(System.currentTimeMillis())));
-//            add(new Schedule(8, 1, 1, new Date(System.currentTimeMillis())));
-//            add(new Schedule(1, 1, 1, new Date(System.currentTimeMillis())));
-//            add(new Schedule(1, 1, 1, new Date(System.currentTimeMillis())));
-//        }});
-
     }
 
 
@@ -329,28 +322,7 @@ public class addschedule extends AppCompatActivity implements ScheduleAdapter.De
                 ));
             }
         }
-
     }
-
-    @Override
-    public void OnScheduleDeleted(final int scheduleId) {
-        new AlertDialog.Builder(addschedule.this)
-                .setTitle("Delete Schedule")
-                .setMessage("Are you sure?")
-                .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        deleteSchedule(scheduleId);
-                    }
-                })
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                }).show();
-    }
-
 
     private class PerformNetworkRequest extends AsyncTask<Void, Void, String> {
         String url;
@@ -376,8 +348,7 @@ public class addschedule extends AppCompatActivity implements ScheduleAdapter.De
             try {
                 JSONObject object = new JSONObject(s);
                 if (!object.getBoolean("error")) {
-                   // Toast.makeText(getApplicationContext(), object.getString("message"), Toast.LENGTH_SHORT).show();
-
+                    Toast.makeText(getApplicationContext(), object.getString("message"), Toast.LENGTH_SHORT).show();
                     if (url.equals(UserApi.URL_READ_USERS)) {
                         refreshList(object.getJSONArray("user"), USER_REQUEST);
                     } else if (url.equals(ClientApi.URL_READ_CLIENTS)) {
@@ -434,5 +405,26 @@ public class addschedule extends AppCompatActivity implements ScheduleAdapter.De
             }
         }
         return "";
+    }
+
+    @Override
+    public void OnScheduleDeleted(final int scheduleId, final int position) {
+        new AlertDialog.Builder(addschedule.this)
+                .setCancelable(false)
+                .setTitle("Delete Schedule")
+                .setMessage("Are you sure?")
+                .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        deleteSchedule(scheduleId);
+                        mAdapter.deleteItem(position);
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                }).show();
     }
 }

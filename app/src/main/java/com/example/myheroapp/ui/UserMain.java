@@ -13,4 +13,9 @@ public class UserMain extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_main);
     }
+
+    @Override
+    public void onBackPressed() {
+
+    }
 }
