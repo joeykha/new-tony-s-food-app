@@ -14,7 +14,7 @@ public class loading extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_loading);
-        Thread xyz=new Thread()
+        Thread xyz= new Thread()
         {
             public void run()
             {
