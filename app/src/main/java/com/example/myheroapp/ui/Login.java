@@ -14,7 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.myheroapp.R;
 import com.example.myheroapp.RequestHandler;
-import com.example.myheroapp.helpers.SharedPrefManager;
+import com.example.myheroapp.common.helpers.SharedPrefManager;
 import com.example.myheroapp.models.LUser;
 import com.example.myheroapp.resources.LoginApi;
 import com.example.myheroapp.ui.AddUserActivity.addUser;

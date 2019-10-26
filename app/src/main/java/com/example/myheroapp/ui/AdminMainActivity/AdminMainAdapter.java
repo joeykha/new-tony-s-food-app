@@ -19,12 +19,12 @@ import java.util.List;
 public class AdminMainAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     public interface AdminMainInterface {
-        void OnCheckStockClicked(int clientId);
+        void OnCheckStockClicked(Client client);
     }
 
     private List<Object> mItems;
     private Context mContext;
-    private AdminMainInterface mAdminMainInterface;
+    private AdminMainInterface  mAdminMainInterface;
 
     public AdminMainAdapter(Context context) {
         mContext = context;
@@ -67,7 +67,7 @@ public class AdminMainAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             ((AdminMainViewHolder) holder).btnCheckStock.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    mAdminMainInterface.OnCheckStockClicked(client.getId());
+                    mAdminMainInterface.OnCheckStockClicked(client);
                 }
             });
         } else if (viewType == 2) {

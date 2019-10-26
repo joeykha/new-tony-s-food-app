@@ -9,9 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myheroapp.R;
-import com.example.myheroapp.models.Schedule;
 import com.example.myheroapp.models.User;
-import com.example.myheroapp.ui.AddScheduleActivity.ScheduleAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +18,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserViewHolder> {
 
     public interface UserInterface {
         void OnUserDeleted(int userId, int position);
-        void OnUserUpdated(int userId);
+        void OnUserUpdated(User user);
     }
 
     private List<User> mItems;
@@ -45,7 +43,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserViewHolder> {
         holder.ivUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mUserInterface.OnUserUpdated(user.getId());
+                mUserInterface.OnUserUpdated(user);
             }
         });
         holder.ivDelete.setOnClickListener(new View.OnClickListener() {

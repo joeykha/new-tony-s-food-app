@@ -21,7 +21,6 @@ import com.example.myheroapp.RequestHandler;
 import com.example.myheroapp.models.User;
 import com.example.myheroapp.resources.UserApi;
 import com.example.myheroapp.ui.AddClientActivity.addclient;
-import com.example.myheroapp.ui.AddScheduleActivity.addschedule;
 import com.example.myheroapp.ui.AdminMainActivity.AdminMain;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
@@ -405,7 +404,7 @@ public class addUser extends AppCompatActivity implements UserAdapter.UserInterf
     }
 
     @Override
-    public void OnUserUpdated(int userId) {
+    public void OnUserUpdated(User user) {
 
     }
 

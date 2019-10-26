@@ -6,7 +6,7 @@
     android:layout_height="55dp"
     android:elevation="7dp"
     android:layout_margin="@dimen/view_holder_margin"
-    android:background="@android:color/darker_gray">
+    android:background="@drawable/layout_rounded_corners">
 
     <ImageView
         android:id="@+id/ivDelete"

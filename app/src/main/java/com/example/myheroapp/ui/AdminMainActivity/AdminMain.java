@@ -43,12 +43,12 @@ public class AdminMain extends AppCompatActivity
 
     private static final int CODE_GET_REQUEST = 1024;
     private static final int CODE_POST_REQUEST = 1025;
+    public static final String CLIENT_TAG = "CLIENT_TAG";
 
     ProgressBar pb;
 
     List<Object> rvItems;
     RecyclerView rvClients;
-    AdminMainAdapter clientsAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +66,7 @@ public class AdminMain extends AppCompatActivity
 
         pb = findViewById(R.id.pb);
         rvClients = findViewById(R.id.rvAdminMain);
-        rvClients.setLayoutManager(new LinearLayoutManager(getApplicationContext(),RecyclerView.VERTICAL, false));
+        rvClients.setLayoutManager(new LinearLayoutManager(getApplicationContext(), RecyclerView.VERTICAL, false));
 
 
         readclients();
@@ -136,7 +136,6 @@ public class AdminMain extends AppCompatActivity
         PerformNetworkRequest request = new PerformNetworkRequest(ClientApi.URL_READ_CLIENTS, null, CODE_GET_REQUEST);
         request.execute();
     }
-
 
 
     private class PerformNetworkRequest extends AsyncTask<Void, Void, String> {
@@ -210,8 +209,10 @@ public class AdminMain extends AppCompatActivity
     }
 
     @Override
-    public void OnCheckStockClicked(int clientId) {
-        startActivity(new Intent(AdminMain.this, ProductDetailsActivity.class));
+    public void OnCheckStockClicked(Client client) {
+        Bundle args = new Bundle();
+        args.putSerializable(CLIENT_TAG, client);
+        startActivity(new Intent(AdminMain.this, ProductDetailsActivity.class).putExtras(args));
     }
 }
 
