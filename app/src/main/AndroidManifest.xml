@@ -10,12 +10,13 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".ui.ProductDetailsActivity.ProductDetailsActivity"
-            android:label="@string/title_activity_product_details"/>
+        <activity android:name=".ui.CheckInActivity.CheckInActivity"></activity>
         <activity
-            android:name=".ui.UserMain"
+            android:name=".ui.ProductDetailsActivity.ProductDetailsActivity"
+            android:label="@string/title_activity_product_details" />
+        <activity
+            android:name=".ui.UserMainActivity.UserMain"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".ui.AddProductActivity.addproduct"
             android:screenOrientation="portrait" />
@@ -37,7 +38,7 @@
 
         </activity>
         <activity
-            android:name=".ui.loading"
+            android:name=".ui.SplashLoginActivity.loading"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -46,7 +47,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.Login"
+            android:name=".ui.SplashLoginActivity.Login"
             android:screenOrientation="portrait" />
 
         <meta-data

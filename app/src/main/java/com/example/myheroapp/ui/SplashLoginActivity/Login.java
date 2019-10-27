@@ -1,4 +1,4 @@
-package com.example.myheroapp.ui;
+package com.example.myheroapp.ui.SplashLoginActivity;
 
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -19,6 +19,7 @@ import com.example.myheroapp.models.LUser;
 import com.example.myheroapp.resources.LoginApi;
 import com.example.myheroapp.ui.AddUserActivity.addUser;
 import com.example.myheroapp.ui.AdminMainActivity.AdminMain;
+import com.example.myheroapp.ui.UserMainActivity.UserMain;
 
 import org.json.JSONException;
 import org.json.JSONObject;

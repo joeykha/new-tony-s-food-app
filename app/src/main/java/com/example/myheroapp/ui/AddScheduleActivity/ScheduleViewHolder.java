@@ -20,7 +20,7 @@ public class ScheduleViewHolder extends RecyclerView.ViewHolder {
 
     public ScheduleViewHolder(@NonNull LayoutInflater inflater, @LayoutRes int resource, ViewGroup parent) {
         super(inflater.inflate(resource, parent, false));
-        tvUsername = itemView.findViewById(R.id.tvClientName);
+        tvUsername = itemView.findViewById(R.id.tvTitle);
         tvLocation = itemView.findViewById(R.id.tvLocation);
         tvDate = itemView.findViewById(R.id.tvDate);
         ivDelete = itemView.findViewById(R.id.ivDelete);

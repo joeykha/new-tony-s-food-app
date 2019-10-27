@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myheroapp.R;
 import com.example.myheroapp.RequestHandler;
+import com.example.myheroapp.common.helpers.Helper;
 import com.example.myheroapp.models.Product;
 import com.example.myheroapp.resources.ProductApi;
 import com.google.android.material.textfield.TextInputEditText;
@@ -96,7 +97,7 @@ public class addproduct extends AppCompatActivity implements ProductAdapter.Dele
 
         request.execute();
         tietProductName.setText("");
-
+        Helper.hideKeyboard(this);
     }
 
     private void readProducts() {

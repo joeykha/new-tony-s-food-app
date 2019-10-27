@@ -1,4 +1,4 @@
-package com.example.myheroapp.ui.ProductDetailsActivity;
+package com.example.myheroapp.ui.ProductDetailsActivity.viewholders;
 
 import android.view.View;
 import android.widget.TextView;

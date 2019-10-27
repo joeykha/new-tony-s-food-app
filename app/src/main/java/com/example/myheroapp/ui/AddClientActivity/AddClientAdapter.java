@@ -14,7 +14,7 @@ import com.example.myheroapp.models.Client;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ClientAdapter extends RecyclerView.Adapter<ClientViewHolder> {
+public class AddClientAdapter extends RecyclerView.Adapter<ClientViewHolder> {
 
     public interface DeleteClientInterface {
         void OnClientDeleted(int clientId, int position);
@@ -24,7 +24,7 @@ public class ClientAdapter extends RecyclerView.Adapter<ClientViewHolder> {
     private List<Client> mItems;
     private DeleteClientInterface mDeleteClientInterface;
 
-    public ClientAdapter(Context context) {
+    public AddClientAdapter(Context context) {
         mContext = context;
     }
 

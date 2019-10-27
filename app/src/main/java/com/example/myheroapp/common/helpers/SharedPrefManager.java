@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 
 import com.example.myheroapp.models.LUser;
-import com.example.myheroapp.ui.Login;
+import com.example.myheroapp.ui.SplashLoginActivity.Login;
 
 public class SharedPrefManager {
 

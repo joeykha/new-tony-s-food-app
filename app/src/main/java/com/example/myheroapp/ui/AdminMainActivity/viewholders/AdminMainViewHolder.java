@@ -11,13 +11,12 @@ import com.example.myheroapp.R;
 
 public class AdminMainViewHolder extends RecyclerView.ViewHolder {
 
-    public TextView tvClientName;
-    public Button btnCheckStock;
+    public TextView tvClientName, tvCheck;
 
 
     public AdminMainViewHolder(@NonNull View itemView) {
         super(itemView);
-        tvClientName = itemView.findViewById(R.id.tvClientName);
-        btnCheckStock = itemView.findViewById(R.id.btnCheckStock);
+        tvClientName = itemView.findViewById(R.id.tvTitle);
+        tvCheck = itemView.findViewById(R.id.tvCheckStock);
     }
 }

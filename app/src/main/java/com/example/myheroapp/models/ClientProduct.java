@@ -21,6 +21,7 @@ public class ClientProduct {
         this.check_out = check_out;
     }
 
+
     public int getId() {
         return id;
     }
@@ -84,6 +85,7 @@ public class ClientProduct {
     public void setCheck_out(String check_out) {
         this.check_out = check_out;
     }
+
 }
 
 

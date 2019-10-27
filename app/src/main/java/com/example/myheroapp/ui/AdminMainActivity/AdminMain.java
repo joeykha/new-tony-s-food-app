@@ -25,6 +25,7 @@ import com.example.myheroapp.ui.AddClientActivity.addclient;
 import com.example.myheroapp.ui.AddProductActivity.addproduct;
 import com.example.myheroapp.ui.AddScheduleActivity.addschedule;
 import com.example.myheroapp.ui.AddUserActivity.addUser;
+import com.example.myheroapp.ui.ClientAdapter;
 import com.example.myheroapp.ui.ProductDetailsActivity.ProductDetailsActivity;
 import com.google.android.material.navigation.NavigationView;
 
@@ -39,7 +40,7 @@ import java.util.List;
 import static android.view.View.GONE;
 
 public class AdminMain extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, AdminMainAdapter.AdminMainInterface {
+        implements NavigationView.OnNavigationItemSelectedListener, ClientAdapter.AdminMainInterface {
 
     private static final int CODE_GET_REQUEST = 1024;
     private static final int CODE_POST_REQUEST = 1025;
@@ -202,7 +203,7 @@ public class AdminMain extends AppCompatActivity
         rvItems.add("Clients:");
         rvItems.addAll(clientItems);
 
-        AdminMainAdapter adapter = new AdminMainAdapter(getApplicationContext());
+        ClientAdapter adapter = new ClientAdapter(getApplicationContext());
         adapter.setItems(rvItems);
         adapter.setAdminMainInterface(this);
         rvClients.setAdapter(adapter);
@@ -213,6 +214,12 @@ public class AdminMain extends AppCompatActivity
         Bundle args = new Bundle();
         args.putSerializable(CLIENT_TAG, client);
         startActivity(new Intent(AdminMain.this, ProductDetailsActivity.class).putExtras(args));
+    }
+
+    @Override
+    protected void onResume() {
+        readclients();
+        super.onResume();
     }
 }
 

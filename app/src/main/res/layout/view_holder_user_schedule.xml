@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/constraintLayout"
     android:elevation="7dp"
-    android:layout_margin="@dimen/view_holder_margin"
     android:background="@drawable/layout_rounded_corners"
+    android:layout_margin="@dimen/view_holder_margin"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -13,23 +14,22 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="24dp"
         android:layout_marginEnd="16dp"
         android:text="TextView"
-        app:layout_constraintEnd_toStartOf="@+id/ivDelete"
+        app:layout_constraintEnd_toStartOf="@+id/tvCheckIn"
         app:layout_constraintStart_toEndOf="@+id/lblLocation"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@+id/lblClient" />
 
     <TextView
         android:id="@+id/lblClient"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:text="Client:"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/tvTitle"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="24dp"
+        android:text="Client:"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/tvTitle" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/lblLocation"
@@ -37,29 +37,49 @@
         android:layout_height="wrap_content"
         android:text="Location:"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/tvLocation"
         app:layout_constraintStart_toStartOf="@+id/lblClient"
         app:layout_constraintTop_toTopOf="@+id/tvLocation" />
+
+    <TextView
+        android:id="@+id/lblDate"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Date:"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@+id/lblLocation"
+        app:layout_constraintTop_toTopOf="@+id/tvDate" />
+
+    <TextView
+        android:id="@+id/tvDate"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="16dp"
+        android:text="TextView"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/tvLocation"
+        app:layout_constraintStart_toStartOf="@+id/tvLocation"
+        app:layout_constraintTop_toBottomOf="@+id/tvLocation" />
 
     <TextView
         android:id="@+id/tvLocation"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:layout_marginBottom="24dp"
         android:text="TextView"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/tvTitle"
         app:layout_constraintStart_toStartOf="@+id/tvTitle"
         app:layout_constraintTop_toBottomOf="@+id/tvTitle" />
 
-    <ImageView
-        android:id="@+id/ivDelete"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:src="@drawable/ic_delete"
-        android:layout_marginEnd="16dp"
+    <TextView
+        android:id="@+id/tvCheckIn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="24dp"
+        android:textStyle="bold"
+        android:text="Check In"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

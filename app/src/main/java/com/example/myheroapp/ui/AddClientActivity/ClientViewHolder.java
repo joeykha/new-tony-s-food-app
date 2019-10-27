@@ -16,7 +16,7 @@ public class ClientViewHolder extends RecyclerView.ViewHolder {
 
     public ClientViewHolder(@NonNull View itemView) {
         super(itemView);
-        tvClientName = itemView.findViewById(R.id.tvClientName);
+        tvClientName = itemView.findViewById(R.id.tvTitle);
         tvLocation = itemView.findViewById(R.id.tvLocation);
         ivDelete = itemView.findViewById(R.id.ivDelete);
     }

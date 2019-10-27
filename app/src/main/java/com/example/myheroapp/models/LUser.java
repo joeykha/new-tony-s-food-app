@@ -1,7 +1,9 @@
 package com.example.myheroapp.models;
 
 
-public class LUser {
+import java.io.Serializable;
+
+public class LUser implements Serializable {
 
     private int id;
     private String firstName, fatherName, lastName,userName;

@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myheroapp.R;
 import com.example.myheroapp.RequestHandler;
+import com.example.myheroapp.common.helpers.Helper;
 import com.example.myheroapp.models.Client;
 import com.example.myheroapp.models.Schedule;
 import com.example.myheroapp.models.User;
@@ -185,6 +186,7 @@ public class addschedule extends AppCompatActivity implements ScheduleAdapter.De
 
                     PerformNetworkRequest request = new PerformNetworkRequest(ScheduleApi.URL_CREATE_SCHEDULE, params, CODE_POST_REQUEST);
                     request.execute();
+                    Helper.hideKeyboard(addschedule.this);
                     readSchedules();
                 }
             }

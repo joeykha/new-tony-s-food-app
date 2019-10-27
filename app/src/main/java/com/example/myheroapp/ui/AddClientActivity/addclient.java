@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myheroapp.R;
 import com.example.myheroapp.RequestHandler;
+import com.example.myheroapp.common.helpers.Helper;
 import com.example.myheroapp.models.Client;
 import com.example.myheroapp.resources.ClientApi;
 import com.google.android.material.textfield.TextInputEditText;
@@ -30,7 +31,7 @@ import java.util.List;
 
 import static android.view.View.GONE;
 
-public class addclient extends AppCompatActivity implements ClientAdapter.DeleteClientInterface {
+public class addclient extends AppCompatActivity implements AddClientAdapter.DeleteClientInterface {
 
 
     private static final int CODE_GET_REQUEST = 1024;
@@ -40,7 +41,7 @@ public class addclient extends AppCompatActivity implements ClientAdapter.Delete
     ProgressBar progressBar;
 
     RecyclerView rv;
-    ClientAdapter clientAdapter;
+    AddClientAdapter addClientAdapter;
     Button buttonAddUpdate;
     List<Client> clientList;
 
@@ -104,6 +105,7 @@ public class addclient extends AppCompatActivity implements ClientAdapter.Delete
         request.execute();
         tietClientName.setText("");
         tietLocation.setText("");
+        Helper.hideKeyboard(this);
     }
 
     private void readclients() {
@@ -115,8 +117,6 @@ public class addclient extends AppCompatActivity implements ClientAdapter.Delete
 
 //todo to remove updateClient
     private void updateClient() {
-        //todo get client id
-//        String id = edittextclientid.getText().toString();
         String name = tietClientName.getText().toString().trim();
         String location = tietLocation.getText().toString().trim();
 
@@ -168,10 +168,10 @@ public class addclient extends AppCompatActivity implements ClientAdapter.Delete
             ));
         }
 
-        clientAdapter = new ClientAdapter(getApplicationContext());
-        clientAdapter.setItems(clientList);
-        clientAdapter.setDeleteClientInterface(this);
-        rv.setAdapter(clientAdapter);
+        addClientAdapter = new AddClientAdapter(getApplicationContext());
+        addClientAdapter.setItems(clientList);
+        addClientAdapter.setDeleteClientInterface(this);
+        rv.setAdapter(addClientAdapter);
     }
 
     @Override
@@ -184,7 +184,7 @@ public class addclient extends AppCompatActivity implements ClientAdapter.Delete
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         deleteClient(clientId);
-                        clientAdapter.deleteItem(position);
+                        addClientAdapter.deleteItem(position);
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {

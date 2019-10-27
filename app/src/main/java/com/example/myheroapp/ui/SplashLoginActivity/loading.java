@@ -1,4 +1,4 @@
-package com.example.myheroapp.ui;
+package com.example.myheroapp.ui.SplashLoginActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
