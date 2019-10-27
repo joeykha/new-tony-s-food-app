@@ -123,7 +123,8 @@ public class CheckInActivity extends AppCompatActivity implements StockCountAdap
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
+
+
     }
 
     @Override
