@@ -1,6 +1,8 @@
 package com.example.myheroapp.ui.CheckInActivity;
 
 import android.content.Context;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +21,7 @@ public class StockCountAdapter extends RecyclerView.Adapter<StockCountViewHolder
     public interface StockCountInterface{
         void OnAddQuantityClicked(int productId);
         void OnRemoveQuantityClicked(int productId);
+        void OnSetQuantityClicked(int productId, int quantity);
     }
 
     private Context mContext;
@@ -42,14 +45,34 @@ public class StockCountAdapter extends RecyclerView.Adapter<StockCountViewHolder
     public void onBindViewHolder(@NonNull final StockCountViewHolder holder, int position) {
         final Product product = mItems.get(position);
         holder.tvProduct.setText(product.getName());
-        holder.tvQuantity.setText(String.valueOf(product.getTmpQuantity()));
+        holder.etQuantity.setText(String.valueOf(product.getTmpQuantity()));
+        holder.etQuantity.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if(!charSequence.toString().equals("")){
+                    int quantity = Integer.parseInt(String.valueOf(charSequence));
+                    product.setTmpQuantity(quantity);
+                    mStockCountInterface.OnSetQuantityClicked(product.getId(), quantity);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
         holder.ivRemove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(product.getTmpQuantity() > 0){
                     product.addQuantity(-1);
                     mStockCountInterface.OnRemoveQuantityClicked(product.getId());
-                    holder.tvQuantity.setText(String.valueOf(product.getTmpQuantity()));
+                    holder.etQuantity.setText(String.valueOf(product.getTmpQuantity()));
                 }
             }
         });
@@ -60,7 +83,7 @@ public class StockCountAdapter extends RecyclerView.Adapter<StockCountViewHolder
                 if(product.getTmpQuantity() >= 0){
                     product.addQuantity(1);
                     mStockCountInterface.OnAddQuantityClicked(product.getId());
-                    holder.tvQuantity.setText(String.valueOf(product.getTmpQuantity()));
+                    holder.etQuantity.setText(String.valueOf(product.getTmpQuantity()));
                 }
             }
         });

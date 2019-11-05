@@ -51,7 +51,6 @@ public class CheckInActivity extends AppCompatActivity implements StockCountAdap
 
 
     List<ProductQuantity> productCounts;
-    List<ClientProduct> clientProducts;
     List<Product> products;
     Client client;
     LUser user;
@@ -146,6 +145,18 @@ public class CheckInActivity extends AppCompatActivity implements StockCountAdap
                 ProductQuantity productQuantity = productCounts.get(i);
                 if ((productQuantity.getProductId()) == productId) {
                     productQuantity.addQuant(-1);
+                }
+            }
+        }
+    }
+
+    @Override
+    public void OnSetQuantityClicked(int productId, int quantity) {
+        if (productCounts.size() > 0) {
+            for (int i = 0; i < productCounts.size(); i++) {
+                ProductQuantity productQuantity = productCounts.get(i);
+                if ((productQuantity.getProductId()) == productId) {
+                    productQuantity.setQuantity(quantity);
                 }
             }
         }
