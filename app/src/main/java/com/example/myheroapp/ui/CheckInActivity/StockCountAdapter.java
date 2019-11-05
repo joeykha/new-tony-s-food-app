@@ -51,7 +51,7 @@ public class StockCountAdapter extends RecyclerView.Adapter<StockCountViewHolder
             public void onClick(View view) {
                 if(product.getTmpQuantity() > 0){
                     product.addTmpQuantity(-1);
-                    mStockCountInterface.OnAddQuantityClicked(product.getId());
+                    mStockCountInterface.OnRemoveQuantityClicked(product.getId());
                     holder.tvQuantity.setText(String.valueOf(product.getTmpQuantity()));
                 }
             }
@@ -62,7 +62,7 @@ public class StockCountAdapter extends RecyclerView.Adapter<StockCountViewHolder
             public void onClick(View view) {
                 if(product.getTmpQuantity() >= 0){
                     product.addTmpQuantity(1);
-                    mStockCountInterface.OnRemoveQuantityClicked(product.getId());
+                    mStockCountInterface.OnAddQuantityClicked(product.getId());
                     holder.tvQuantity.setText(String.valueOf(product.getTmpQuantity()));
                 }
             }
