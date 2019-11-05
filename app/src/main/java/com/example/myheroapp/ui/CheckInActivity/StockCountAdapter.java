@@ -9,9 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myheroapp.R;
-import com.example.myheroapp.models.ClientProduct;
 import com.example.myheroapp.models.Product;
-import com.example.myheroapp.models.viewholder_models.ProductQuantity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +26,7 @@ public class StockCountAdapter extends RecyclerView.Adapter<StockCountViewHolder
 
     private List<Product> mItems;
 
+
     public StockCountAdapter(Context context) {
         mContext = context;
     }
@@ -40,17 +39,15 @@ public class StockCountAdapter extends RecyclerView.Adapter<StockCountViewHolder
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final StockCountViewHolder holder, final int position) {
-    final Product product = mItems.get(position);
-
+    public void onBindViewHolder(@NonNull final StockCountViewHolder holder, int position) {
+        final Product product = mItems.get(position);
         holder.tvProduct.setText(product.getName());
         holder.tvQuantity.setText(String.valueOf(product.getTmpQuantity()));
-
         holder.ivRemove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(product.getTmpQuantity() > 0){
-                    product.addTmpQuantity(-1);
+                    product.addQuantity(-1);
                     mStockCountInterface.OnRemoveQuantityClicked(product.getId());
                     holder.tvQuantity.setText(String.valueOf(product.getTmpQuantity()));
                 }
@@ -61,7 +58,7 @@ public class StockCountAdapter extends RecyclerView.Adapter<StockCountViewHolder
             @Override
             public void onClick(View view) {
                 if(product.getTmpQuantity() >= 0){
-                    product.addTmpQuantity(1);
+                    product.addQuantity(1);
                     mStockCountInterface.OnAddQuantityClicked(product.getId());
                     holder.tvQuantity.setText(String.valueOf(product.getTmpQuantity()));
                 }

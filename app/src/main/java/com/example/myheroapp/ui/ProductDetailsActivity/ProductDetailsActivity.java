@@ -112,12 +112,10 @@ public class ProductDetailsActivity extends AppCompatActivity {
                 clientProducts.add(new ClientProduct(
                         obj.getInt("id"),
                         obj.getInt("quantity"),
+                        obj.getString("cp_Date"),
                         obj.getInt("id_User"),
                         obj.getInt("id_Client"),
-                        obj.getInt("id_Product"),
-                        obj.getString("cp_Date"),
-                        obj.getString("check_in"),
-                        obj.getString("check_out")
+                        obj.getInt("id_Product")
                 ));
             }
         }

@@ -29,7 +29,11 @@ public class ProductQuantity {
         return mQuantity;
     }
 
-    public void addQuantity(int quantity) {
+    public void setQuantity(int quantity) {
+        mQuantity = quantity;
+    }
+
+    public void addQuant(int quantity) {
         mQuantity += quantity;
     }
 

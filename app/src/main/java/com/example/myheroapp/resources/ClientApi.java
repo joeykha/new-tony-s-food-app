@@ -1,7 +1,8 @@
 package com.example.myheroapp.resources;
 
 public class ClientApi {
-    public static final String IP_ADDRESS = "http://192.168.1.68/";
+
+    public static final String IP_ADDRESS = "http://192.168.1.70/";
 
     private static final String ROOT_URL = String.format("%sTonysFood/v1/clientApi.php?apicall=", IP_ADDRESS);
 
