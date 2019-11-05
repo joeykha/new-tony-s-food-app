@@ -3,22 +3,20 @@ package com.example.myheroapp.models;
 public class ClientProduct {
     private int id;
     private int quantity;
+    private String cp_Date;
     private int id_user;
     private int id_Client;
     private int id_Product;
-    private String cp_Date;
-    private String check_in;
-    private String check_out;
 
-    public ClientProduct(int id, int quantity, int id_user, int id_Client, int id_Product, String cp_Date, String check_in, String check_out) {
+
+
+    public ClientProduct(int id, int quantity, String cp_Date, int id_user, int id_Client, int id_Product) {
         this.id = id;
         this.quantity = quantity;
+        this.cp_Date = cp_Date;
         this.id_user = id_user;
         this.id_Client = id_Client;
         this.id_Product = id_Product;
-        this.cp_Date = cp_Date;
-        this.check_in = check_in;
-        this.check_out = check_out;
     }
 
 
@@ -70,21 +68,6 @@ public class ClientProduct {
         this.cp_Date = cp_Date;
     }
 
-    public String getCheck_in() {
-        return check_in;
-    }
-
-    public void setCheck_in(String check_in) {
-        this.check_in = check_in;
-    }
-
-    public String getCheck_out() {
-        return check_out;
-    }
-
-    public void setCheck_out(String check_out) {
-        this.check_out = check_out;
-    }
 
 }
 

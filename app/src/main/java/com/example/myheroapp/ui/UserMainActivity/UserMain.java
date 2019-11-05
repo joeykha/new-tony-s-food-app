@@ -28,10 +28,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 import static android.view.View.GONE;
 
@@ -193,6 +196,8 @@ public class UserMain extends AppCompatActivity implements ClientAdapter.UserMai
         adapter.setUserMainInterface(this);
         rvClients.setAdapter(adapter);
     }
+    String date = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
+
 
     public List<Object> findUserSchedules(){
         List<Object> userSchedules = new ArrayList<>();
@@ -201,9 +206,10 @@ public class UserMain extends AppCompatActivity implements ClientAdapter.UserMai
             schedule = allSchedules.get(i);
             if(schedule.getid_User() == user.getId()){
                 for(int j= 0; j< allClients.size(); j++){
-                    if(allClients.get(j).getId() == schedule.getid_Client()){
+                    if(schedule.getSch_Date().equals(date)  &&  allClients.get(j).getId() == schedule.getid_Client() ){
                         userSchedules.add(new UserSchedule(allClients.get(j), schedule.getSch_Date()));
                     }
+
                 }
             }
         }

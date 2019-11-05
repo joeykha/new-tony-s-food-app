@@ -2,6 +2,7 @@ package com.example.myheroapp.ui.CheckInActivity;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
@@ -30,10 +31,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 import static android.view.View.GONE;
 
@@ -67,7 +70,6 @@ public class CheckInActivity extends AppCompatActivity implements StockCountAdap
         user = (LUser) args.getSerializable(UserMain.USER_TAG);
         ((TextView) findViewById(R.id.tvClient)).setText(String.format("%s\n%s", client.getName(), client.getLocation()));
 
-        productCounts = new ArrayList<>();
 
         rv = findViewById(R.id.rv);
         btnPicBefore = findViewById(R.id.btnPicBefore);
@@ -103,7 +105,8 @@ public class CheckInActivity extends AppCompatActivity implements StockCountAdap
                             public void onClick(DialogInterface dialog, int which) {
                                 if (productCounts.size() > 0) {
                                     createClientProducts(productCounts);
-
+                                    Intent intent = new Intent(CheckInActivity.this, UserMain.class);
+                                    startActivity(intent);
                                 }
                             }
                         })
@@ -116,35 +119,33 @@ public class CheckInActivity extends AppCompatActivity implements StockCountAdap
             }
         });
 
-        readClientProducts();
-
+        readProducts();
     }
-
 
     @Override
     public void onBackPressed() {
 
 
     }
-
     @Override
     public void OnAddQuantityClicked(int productId) {
         if (productCounts.size() > 0) {
             for (int i = 0; i < productCounts.size(); i++) {
-                if ((productCounts.get(i).getProductId()) == productId) {
-                    productCounts.get(i).addQuantity(1);
+                ProductQuantity productQuantity = productCounts.get(i);
+                if ((productQuantity.getProductId()) == productId) {
+                    productQuantity.addQuant(1);
                 }
             }
         }
-
     }
 
     @Override
     public void OnRemoveQuantityClicked(int productId) {
         if (productCounts.size() > 0) {
             for (int i = 0; i < productCounts.size(); i++) {
-                if ((productCounts.get(i).getProductId()) == productId) {
-                    productCounts.get(i).addQuantity(-1);
+                ProductQuantity productQuantity = productCounts.get(i);
+                if ((productQuantity.getProductId()) == productId) {
+                    productQuantity.addQuant(-1);
                 }
             }
         }
@@ -152,19 +153,16 @@ public class CheckInActivity extends AppCompatActivity implements StockCountAdap
 
     private void getProducts(JSONArray productsArray) throws JSONException {
         products = new ArrayList<>();
-        for (int i = 0; i < clientProducts.size(); i++) {
-            ClientProduct clientProduct = clientProducts.get(i);
-            for (int j = 0; j < productsArray.length(); j++) {
+        productCounts = new ArrayList<>();
+        for (int j = 0; j < productsArray.length(); j++) {
                 JSONObject obj = productsArray.getJSONObject(j);
-                if (clientProduct.getId_Product() == obj.getInt("id")) {
+                productCounts.add(new ProductQuantity(obj.getInt("id"), 0));
                     products.add(new Product(
                             obj.getInt("id"),
                             obj.getString("name"),
                             0
                     ));
-                }
             }
-        }
 
         if (products.size() > 0) {
             StockCountAdapter stockCountAdapter = new StockCountAdapter(getApplicationContext());
@@ -172,56 +170,34 @@ public class CheckInActivity extends AppCompatActivity implements StockCountAdap
             stockCountAdapter.setItems(products);
             rv.setAdapter(stockCountAdapter);
         }
-
     }
 
-    private void getClientProducts(JSONArray clientProductsArray) throws JSONException {
-        clientProducts = new ArrayList<>();
-        for (int i = 0; i < clientProductsArray.length(); i++) {
-            JSONObject obj = clientProductsArray.getJSONObject(i);
-            productCounts.add(new ProductQuantity(obj.getInt("id"), 0));
-            clientProducts.add(new ClientProduct(
-                    obj.getInt("id"),
-                    obj.getInt("quantity"),
-                    obj.getInt("id_User"),
-                    obj.getInt("id_Client"),
-                    obj.getInt("id_Product"),
-                    obj.getString("cp_Date"),
-                    obj.getString("check_in"),
-                    obj.getString("check_out")
-            ));
-        }
-    }
 //todo fix create ClientProduct
     private void createClientProducts(List<ProductQuantity> productQuantities) {
+        String cpdate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
         for (int i = 0; i < productQuantities.size(); i++) {
             ProductQuantity productQuantity = productQuantities.get(i);
             HashMap<String, String> params = new HashMap<>();
+
             params.put("quantity", String.valueOf(productQuantity.getQuantity()));
-            params.put("cp_Date", Calendar.getInstance().getTime().toString());
+            params.put("cp_Date", cpdate);
             params.put("id_User", String.valueOf(user.getId()));
             params.put("id_Client", String.valueOf(client.getId()));
             params.put("id_Product", String.valueOf(productQuantity.getProductId()));
-            params.put("check_in", null);
-            params.put("check_out", null);
 
             PerformNetworkRequest request = new PerformNetworkRequest(ClientProductApi.URL_CREATE_CLIENT_PRODUCT, params, CODE_POST_REQUEST);
             request.execute();
+
+
         }
 
-    }
 
-    private void readClientProducts() {
-        PerformNetworkRequest request = new PerformNetworkRequest(ClientProductApi.URL_READ_CLIENT_PRODUCT, null, CODE_GET_REQUEST);
-        request.execute();
     }
 
     private void readProducts() {
         PerformNetworkRequest request = new PerformNetworkRequest(ProductApi.URL_READ_PRODUCTS, null, CODE_GET_REQUEST);
         request.execute();
     }
-
-
     private class PerformNetworkRequest extends AsyncTask<Void, Void, String> {
         String url;
         HashMap<String, String> params;
@@ -248,14 +224,11 @@ public class CheckInActivity extends AppCompatActivity implements StockCountAdap
                 JSONObject object = new JSONObject(s);
                 if (!object.getBoolean("error")) {
                     Toast.makeText(getApplicationContext(), object.getString("message"), Toast.LENGTH_SHORT).show();
-                    if (url.equals(ClientProductApi.URL_READ_CLIENT_PRODUCT)) {
-                        getClientProducts(object.getJSONArray("client_product"));
-                        readProducts();
-                    } else if (url.equals(ProductApi.URL_READ_PRODUCTS)) {
+                    if (url.equals(ProductApi.URL_READ_PRODUCTS)) {
                         getProducts(object.getJSONArray("product"));
                     } else if (url.equals(ClientProductApi.URL_CREATE_CLIENT_PRODUCT)) {
                         count++;
-                        if(count == 3){
+                        if(count == productCounts.size()){
                             CheckInActivity.this.finish();
                         }
                     }

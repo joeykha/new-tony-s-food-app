@@ -31,7 +31,11 @@ public class Product  {
         return tmpQuantity;
     }
 
-    public void addTmpQuantity(int tmpQuantity) {
+    public void setTmpQuantity(int tmpQuantity) {
+        this.tmpQuantity = tmpQuantity;
+    }
+
+    public void addQuantity(int tmpQuantity) {
         this.tmpQuantity += tmpQuantity;
     }
 
